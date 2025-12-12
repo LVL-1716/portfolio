@@ -1,0 +1,4 @@
+.section { padding: 40px 16px; }
+.container { max-width: 1100px; margin: 0 auto; }
+.grid { display:flex; gap: 12px; flex-wrap:wrap; list-style:none; padding:0; margin: 8px 0 0; }
+.skill { background: #f6f8fb; padding: 8px 12px; border-radius: 8px; font-weight: 500; }
