@@ -29,3 +29,13 @@ jobs:
         with:
           name: portfolio-build
           path: portfolio/build
+      - name: Deploy to Vercel
+        if: github.ref == 'refs/heads/main' && secrets.VERCEL_TOKEN
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-args: '--prod'
+          working-directory: ./portfolio
+          # Optional: set org and project if you have them in secrets
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID || '' }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID || '' }}
