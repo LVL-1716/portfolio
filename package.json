@@ -1,0 +1,17 @@
+{
+  "name": "portfolio-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:portfolio": "npm --prefix ./portfolio install",
+    "start:portfolio": "npm --prefix ./portfolio start",
+    "build:portfolio": "npm --prefix ./portfolio run build",
+    "test:portfolio": "npm --prefix ./portfolio test",
+    "lint": "echo 'No linter configured'",
+    "install": "npm run install:portfolio",
+    "start": "npm run start:portfolio",
+    "build": "npm run build:portfolio",
+    "test": "npm run test:portfolio",
+    "ci": "npm --prefix ./portfolio ci && npm --prefix ./portfolio test -- --watchAll=false && npm --prefix ./portfolio run build"
+  }
+}
