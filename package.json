@@ -23,4 +23,12 @@
     "lint": "eslint \"src/**/*.{js,jsx}\" || echo \"Lint failed or not installed\"",
     "eject": "react-scripts eject"
   }
+  ,
+  "overrides": {
+    "nth-check": "2.0.1",
+    "postcss": "8.4.31",
+    "svgo": "2.8.0",
+    "webpack-dev-server": "5.2.2",
+    "css-select": "4.1.3"
+  }
 }
