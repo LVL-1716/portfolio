@@ -178,14 +178,16 @@ Lista de projetos usados no portfólio (com links para os repositórios):
 
 ---
 
-## Nota sobre vulnerabilidades e dependências
-Executamos uma verificação com `npm audit` e aplicamos correções seguras com `npm audit fix`. Ainda assim, algumas vulnerabilidades permanecem em dependências encadeadas (por exemplo `svgo`, `postcss`) que exigem atualizações maiores em bibliotecas como `react-scripts` ou outras dependências.
+## Status de Segurança
+Executamos uma verificação com `npm audit` e aplicamos correções seguras com `npm audit fix` além de adicionar `overrides` para certas dependências encadeadas (por exemplo `postcss`, `svgo`, `nth-check`) para mitigar vulnerabilidades reportadas.
+
+Resultado:
+- `npm audit` no branch `fix/audit-updates` reporta 0 vulnerabilidades.
 
 Recomendações:
-- Rode `npm audit --prefix .\portfolio` para ver detalhes.
-- Tente `npm audit fix --prefix .\portfolio` para correções automáticas.
-- Evite `npm audit fix --prefix .\portfolio --force` sem revisar o impacto (pode atualizar `react-scripts` para uma versão incompatível com mudanças de API/semver).
-- Caso deseje, eu posso criar um branch e tentar atualizar pacotes e testar o impacto em build/testes.
+- Rode `npm audit --prefix .\portfolio` para ver detalhes locais.
+- Evite `npm audit fix --prefix .\portfolio --force` sem revisar o impacto: pode atualizar `react-scripts` para uma versão com breaking changes.
+- Para remoção definitiva das vulnerabilidades, considere atualizar `react-scripts` ou migrar para outra cadeia de build (Vite/Next.js).
 
 ---
 
