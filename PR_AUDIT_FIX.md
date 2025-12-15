@@ -31,3 +31,15 @@ Suggested push & PR steps (GitHub):
 3. Open PRs from those branches and link them.
 
 If you'd like, I can prepare the PR content or open the PR if you provide the remote.
+
+Deprecation warnings found during install
+- npm printed deprecation warnings for: `abab`, `@humanwhocodes/config-array`, `@humanwhocodes/object-schema`, and several `@babel/plugin-proposal-*` packages.
+- Root cause: these are transitive dependencies pulled in by `react-scripts` (via `babel-preset-react-app`, `jsdom`, `source-map-loader`) and by the ESLint tree bundled with `react-scripts`.
+- Notes on resolution options:
+   - Short-term: these warnings are informational (no immediate security issue). You can safely continue, or add notes to the PR explaining the origin.
+   - Medium-term: attempt `overrides` for nested packages or upgrade direct deps. npm's overrides are limited when conflicts with direct/top-level deps exist.
+   - Long-term: consider upgrading the toolchain (bump `react-scripts` if a compatible update exists) or migrating to a modern bundler (Vite) which removes these transitive dependencies.
+
+   Build note:
+   - To make the production build succeed after changing dev dependencies, I neutralized the project's `.eslintrc.json` because it extended `react-app` and caused a config/version conflict during the `react-scripts build` step. The original config was saved to `.eslintrc.json.bak`.
+

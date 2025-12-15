@@ -35,3 +35,27 @@ CI / GitHub Actions
 ---
 
 Se desejar, configure o repositório no GitHub e ative o deploy automático no Vercel (veja `./portfolio/README.md` para instruções detalhadas de deploy).
+
+---
+
+## Servidor de Produção (local)
+- O `portfolio` pode ser servido estaticamente com o script:
+
+```powershell
+cd portfolio
+npm run serve:prod
+```
+
+- Para manter o servidor gerenciado e reiniciá-lo automaticamente no boot, use PM2 (recomendado):
+
+```powershell
+cd portfolio
+npm install
+npm run pm2:start
+npm run pm2:save
+# Para ativar o startup do sistema (pode exigir execução como administrador):
+# npx pm2 startup
+```
+
+Observação: a instância gerenciada pelo PM2 servirá o diretório `portfolio/build` em `http://localhost:5000` conforme `ecosystem.config.js`.
+
