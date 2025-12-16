@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './Contact.module.css';
 
-const Contact = () => {
+const Contact = ({ targetEmail = 'seu-email@exemplo.com' }) => {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
@@ -21,8 +21,10 @@ const Contact = () => {
     if (validation) { setError(validation); return; }
     setError('');
     // Expo/demo: abrir mailto
-    window.location.href = `mailto:seu-email@exemplo.com?subject=Contato%20do%20site&body=${encodeURIComponent(`${form.name} - ${form.email}\n\n${form.message}`)}`;
+    window.location.href = `mailto:${targetEmail}?subject=Contato%20do%20site&body=${encodeURIComponent(`${form.name} - ${form.email}\n\n${form.message}`)}`;
     setSent(true);
+    // Resetar o estado 'sent' após alguns segundos para que a mensagem de sucesso não fique permanentemente na tela.
+    setTimeout(() => setSent(false), 5000);
   };
 
   return (

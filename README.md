@@ -120,6 +120,30 @@ Os testes atuais cobrem:
 O projeto já contém suporte PWA simples:
 - `public/manifest.json` com meta informações e ícones
 - `public/service-worker.js` com cache básico
+
+**Servir em produção**
+
+- Build e servir localmente (HTTP estático, porta 5000):
+
+```powershell
+cd portfolio
+npm run build
+npm run serve:prod
+```
+
+- Manter o servidor em execução automaticamente usando PM2 (recomendado para host):
+
+```powershell
+cd portfolio
+npm install
+npm run pm2:start         # Inicia o processo PM2 definido em ecosystem.config.js
+npm run pm2:save          # Salva a lista de processos para restaurar depois de reboot
+# (Opcional) Para configurar o sistema a iniciar PM2 na inicialização, execute:
+# npx pm2 startup
+```
+
+**Observação:** O servidor ficará disponível em http://localhost:5000 e o processo estará gerenciado pelo PM2.
+
 - `src/serviceWorkerRegistration.js` faz o registro do service worker
 
 Testes:
