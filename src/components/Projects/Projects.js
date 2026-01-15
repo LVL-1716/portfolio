@@ -2,6 +2,9 @@ import React from 'react';
 import styles from './Projects.module.css';
 import ProjectCard from './ProjectCard';
 import placeholder from '../../assets/project-placeholder.png';
+import tarefasImage from '../../assets/Tarefas.jpg';
+import mfImage from '../../assets/MF.jpg';
+import petImage from '../../assets/Pet.jpg';
 
 // Minimal project metadata to render cards. Replace description and images as needed.
 const githubProjects = [
@@ -12,7 +15,7 @@ const githubProjects = [
     tech: ['React', 'CSS Modules', 'LocalStorage'],
     repo: 'https://github.com/LVL-1716/tarefas-app',
     demo: '',
-    image: placeholder,
+    image: tarefasImage,
   },
   {
     id: 'Pet',
@@ -21,7 +24,7 @@ const githubProjects = [
     tech: ['React', 'Node.js', 'CSS Modules'],
     repo: 'https://github.com/LVL-1716/Pet',
     demo: '',
-    image: placeholder,
+    image: petImage,
   },
   {
     id: 'MF',
@@ -30,7 +33,7 @@ const githubProjects = [
     tech: ['React', 'React Router', 'API REST'],
     repo: 'https://github.com/LVL-1716/MF',
     demo: '',
-    image: placeholder,
+    image: mfImage,
   }
 ];
 

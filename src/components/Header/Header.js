@@ -27,7 +27,7 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <div className={styles.brand}>LVL-1716</div>
+        <a href="https://github.com/LVL-1716" target="_blank" rel="noreferrer" className={styles.brand}>Luciano Lima</a>
         <nav className={styles.nav}>
           <a href="#home" onClick={(e) => handleNav(e, 'home')}>Início</a>
           <a href="#projects" onClick={(e) => handleNav(e, 'projects')}>Projetos</a>

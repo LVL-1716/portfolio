@@ -1,0 +1,195 @@
+diff --git a/node_modules/react-scripts/config/webpackDevServer.config.js b/node_modules/react-scripts/config/webpackDevServer.config.js
+index 522a81b..643bf40 100644
+--- a/node_modules/react-scripts/config/webpackDevServer.config.js
++++ b/node_modules/react-scripts/config/webpackDevServer.config.js
+@@ -99,7 +99,14 @@ module.exports = function (proxy, allowedHost) {
+       publicPath: paths.publicUrlOrPath.slice(0, -1),
+     },
+ 
+-    https: getHttpsConfig(),
++    server: getHttpsConfig()
++      ? {
++          type: 'https',
++          options: getHttpsConfig(),
++        }
++      : {
++          type: 'http',
++        },
+     host,
+     historyApiFallback: {
+       // Paths with dots should still use the history fallback.
+@@ -109,27 +116,30 @@ module.exports = function (proxy, allowedHost) {
+     },
+     // `proxy` is run between `before` and `after` `webpack-dev-server` hooks
+     proxy,
+-    onBeforeSetupMiddleware(devServer) {
+-      // Keep `evalSourceMapMiddleware`
+-      // middlewares before `redirectServedPath` otherwise will not have any effect
+-      // This lets us fetch source contents from webpack for the error overlay
+-      devServer.app.use(evalSourceMapMiddleware(devServer));
++    setupMiddlewares(middlewares, devServer) {
++      // Eval source map middleware
++      middlewares.unshift({
++        name: 'evalSourceMap',
++        middleware: evalSourceMapMiddleware(devServer),
++      });
+ 
+       if (fs.existsSync(paths.proxySetup)) {
+         // This registers user provided middleware for proxy reasons
+         require(paths.proxySetup)(devServer.app);
+       }
+-    },
+-    onAfterSetupMiddleware(devServer) {
+-      // Redirect to `PUBLIC_URL` or `homepage` from `package.json` if url not match
+-      devServer.app.use(redirectServedPath(paths.publicUrlOrPath));
+ 
+-      // This service worker file is effectively a 'no-op' that will reset any
+-      // previous service worker registered for the same host:port combination.
+-      // We do this in development to avoid hitting the production cache if
+-      // it used the same host and port.
+-      // https://github.com/facebook/create-react-app/issues/2272#issuecomment-302832432
+-      devServer.app.use(noopServiceWorkerMiddleware(paths.publicUrlOrPath));
++      // Redirect and noop service worker middlewares should be added after webpack middleware
++      middlewares.push({
++        name: 'redirectServedPath',
++        middleware: redirectServedPath(paths.publicUrlOrPath),
++      });
++
++      middlewares.push({
++        name: 'noopServiceWorker',
++        middleware: noopServiceWorkerMiddleware(paths.publicUrlOrPath),
++      });
++
++      return middlewares;
+     },
+   };
+ };
+diff --git a/node_modules/react-scripts/scripts/start.js b/node_modules/react-scripts/scripts/start.js
+index 8b9a2c2..34b84b3 100644
+--- a/node_modules/react-scripts/scripts/start.js
++++ b/node_modules/react-scripts/scripts/start.js
+@@ -16,9 +16,16 @@ process.env.NODE_ENV = 'development';
+ // ignoring them. In the future, promise rejections that are not handled will
+ // terminate the Node.js process with a non-zero exit code.
+ process.on('unhandledRejection', err => {
++  console.log('[DEBUG] Unhandled rejection:', err);
+   throw err;
+ });
+ 
++// Handle uncaught exceptions
++process.on('uncaughtException', (err) => {
++  console.log('[DEBUG] Uncaught exception:', err);
++  process.exit(1);
++});
++
+ // Ensure environment variables are read.
+ require('../config/env');
+ 
+@@ -82,12 +89,15 @@ checkBrowsers(paths.appPath, isInteractive)
+     return choosePort(HOST, DEFAULT_PORT);
+   })
+   .then(port => {
++    console.log('[DEBUG] Port chosen:', port);
+     if (port == null) {
+       // We have not found a port.
++      console.log('[DEBUG] No port found');
+       return;
+     }
+ 
+     const config = configFactory('development');
++    console.log('[DEBUG] Config factory done');
+     const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
+     const appName = require(paths.appPackageJson).name;
+ 
+@@ -99,30 +109,44 @@ checkBrowsers(paths.appPath, isInteractive)
+       paths.publicUrlOrPath.slice(0, -1)
+     );
+     // Create a webpack compiler that is configured with custom messages.
+-    const compiler = createCompiler({
+-      appName,
+-      config,
+-      urls,
+-      useYarn,
+-      useTypeScript,
+-      webpack,
+-    });
++    console.log('[DEBUG] About to create compiler');
++    let compiler;
++    try {
++      compiler = createCompiler({
++        appName,
++        config,
++        urls,
++        useYarn,
++        useTypeScript,
++        webpack,
++      });
++    } catch (err) {
++      console.log('[DEBUG] Error creating compiler:', err);
++      throw err;
++    }
++    console.log('[DEBUG] Compiler created');
+     // Load proxy config
+     const proxySetting = require(paths.appPackageJson).proxy;
++    console.log('[DEBUG] Loaded proxy settings:', proxySetting);
+     const proxyConfig = prepareProxy(
+       proxySetting,
+       paths.appPublic,
+       paths.publicUrlOrPath
+     );
++    console.log('[DEBUG] Proxy config prepared');
+     // Serve webpack assets generated by the compiler over a web server.
+     const serverConfig = {
+       ...createDevServerConfig(proxyConfig, urls.lanUrlForConfig),
+       host: HOST,
+       port,
+     };
++    console.log('[DEBUG] Server config created');
+     const devServer = new WebpackDevServer(serverConfig, compiler);
++    console.log('[DEBUG] WebpackDevServer instance created');
+     // Launch WebpackDevServer.
++    console.log('[DEBUG] About to call startCallback');
+     devServer.startCallback(() => {
++      console.log('[DEBUG] In startCallback');
+       if (isInteractive) {
+         clearConsole();
+       }
+@@ -139,24 +163,33 @@ checkBrowsers(paths.appPath, isInteractive)
+       openBrowser(urls.localUrlForBrowser);
+     });
+ 
++    console.log('[DEBUG] Event listeners about to be setup');
+     ['SIGINT', 'SIGTERM'].forEach(function (sig) {
+       process.on(sig, function () {
+-        devServer.close();
+-        process.exit();
++        devServer.stopCallback(() => {
++          process.exit();
++        });
+       });
+     });
+ 
+     if (process.env.CI !== 'true') {
+       // Gracefully exit when stdin ends
+       process.stdin.on('end', function () {
+-        devServer.close();
+-        process.exit();
++        devServer.stopCallback(() => {
++          process.exit();
++        });
+       });
+     }
++    console.log('[DEBUG] All setup complete');
+   })
+   .catch(err => {
++    console.log('[DEBUG] ERROR in catch block:');
++    console.log('[DEBUG] Error:', err);
+     if (err && err.message) {
+-      console.log(err.message);
++      console.log('[DEBUG] Error message:', err.message);
++    }
++    if (err && err.stack) {
++      console.log('[DEBUG] Error stack:', err.stack);
+     }
+     process.exit(1);
+   });
