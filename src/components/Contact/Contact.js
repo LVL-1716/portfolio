@@ -35,15 +35,15 @@ const Contact = ({ targetEmail = 'seu-email@exemplo.com' }) => {
         <form onSubmit={handleSubmit} className={styles.form} aria-label="contact-form">
           <label>
             Nome
-            <input name="name" value={form.name} onChange={handleChange} />
+            <input type="text" name="name" value={form.name} onChange={handleChange} required />
           </label>
           <label>
             Email
-            <input name="email" value={form.email} onChange={handleChange} />
+            <input type="email" name="email" value={form.email} onChange={handleChange} required />
           </label>
           <label>
             Mensagem
-            <textarea name="message" value={form.message} onChange={handleChange} rows={5} />
+            <textarea name="message" value={form.message} onChange={handleChange} rows={5} required />
           </label>
           {error && <div className={styles.error}>{error}</div>}
           <div className={styles.actions}>

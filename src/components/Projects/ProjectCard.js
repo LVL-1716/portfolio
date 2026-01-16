@@ -20,7 +20,7 @@ const ProjectCard = ({ title, description = '', tech = [], repo = '', demo = '',
 ProjectCard.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
-  tech: PropTypes.array,
+  tech: PropTypes.arrayOf(PropTypes.string),
   repo: PropTypes.string,
   demo: PropTypes.string,
   image: PropTypes.string,
