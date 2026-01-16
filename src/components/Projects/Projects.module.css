@@ -1,0 +1,5 @@
+.section { padding: 40px 16px; border-top: 1px solid rgba(0,0,0,0.04); }
+.container { max-width:1100px; margin: 0 auto; }
+.sub { color: var(--muted); margin-bottom: 18px; }
+.grid { display:flex; flex-direction:column; }
+@media (min-width: 900px) { .grid { display:grid; grid-template-columns: repeat(2, 1fr); gap: 16px; } }

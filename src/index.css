@@ -1,0 +1,27 @@
+/* Simple resets and layout */
+* { box-sizing: border-box; }
+body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; color: var(--text); background-color: var(--bg); transition: background-color .2s ease, color .2s ease; }
+a { text-decoration: none; color: inherit; }
+
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+main { flex: 1; }
+
+:root {
+	/* Light theme (default) */
+	--primary: #1a73e8;
+	--bg: #f6f8fb;
+	--text: #0f1724;
+	--muted: #6b7280;
+	--surface: rgba(255,255,255,0.9);
+	--border: rgba(0,0,0,0.06);
+}
+
+/* Dark theme overrides */
+html[data-theme='dark'] {
+	--primary: #60a5fa;
+	--bg: #0b1220;
+	--text: #e6eef8;
+	--muted: #9aa6b2;
+	--surface: rgba(8,10,12,0.75);
+	--border: rgba(255,255,255,0.06);
+}
