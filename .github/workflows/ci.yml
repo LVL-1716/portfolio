@@ -30,7 +30,7 @@ jobs:
           name: portfolio-build
           path: portfolio/build
       - name: Deploy to Vercel
-        if: github.ref == 'refs/heads/main' && secrets.VERCEL_TOKEN != ''
+        if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && secrets.VERCEL_TOKEN != ''
         uses: amondnet/vercel-action@v20
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
