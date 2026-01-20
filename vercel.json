@@ -1,6 +1,10 @@
 {
   "version": 2,
   "routes": [
+    { "src": "/manifest.json", "dest": "/manifest.json" },
+    { "src": "/service-worker.js", "dest": "/service-worker.js" },
+    { "src": "/favicon.ico", "dest": "/favicon.ico" },
+    { "src": "/icons/(.*)", "dest": "/icons/$1" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
