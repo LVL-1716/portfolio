@@ -1,0 +1,13 @@
+diff --git a/node_modules/wsl-utils/index.js b/node_modules/wsl-utils/index.js
+index 8ae5187..5e42b83 100644
+--- a/node_modules/wsl-utils/index.js
++++ b/node_modules/wsl-utils/index.js
+@@ -19,7 +19,7 @@ export const wslDrivesMountPoint = (() => {
+ 
+ 		let isConfigFileExists = false;
+ 		try {
+-			await fs.access(configFilePath, fsConstants.F_OK);
++			await fs.access(configFilePath, fs.constants.F_OK);
+ 			isConfigFileExists = true;
+ 		} catch {}
+ 
